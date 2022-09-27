@@ -6,10 +6,15 @@ require('dotenv').config();
 
 const app = express();
 app.use(morgan('dev'))
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
 
 mongoose.connect(process.env.MONGO_URI).then(()=>console.log('Mongo conntected')).catch(e=>console.log(e.message))
 
 app.use('/', require('./routes/index.route'));
+app.use('/auth', require('./routes/auth.route'));
+app.use('/user', require('./routes/user.route'));
+app.use('/admin', require('./routes/admin.route'))
 
 app.use((req, res, next)=>{
     next(createHttpError.NotFound());
